@@ -3,6 +3,9 @@ import win32gui, win32ui, win32con, win32api
 import win32clipboard, cv2
 import pyautogui
 from PIL import Image
+from PIL import ImageGrab
+from ctypes import *
+import ctypes
 
 savefilename = "G:/python_job/background.png"
 
@@ -20,10 +23,10 @@ for h,t in hwnd_title.items():
             hwnd = h
 print("target hwnd is " + str(hwnd))
 #把窗口调到前台再进行截图，否则可能会黑屏
-win32gui.SetForegroundWindow(hwnd)
-win32gui.SendMessage(hwnd, win32con.WM_SYSCOMMAND, win32con.SC_RESTORE, 0)
-time.sleep(1)
-def window_capture(filename,hwnd):
+#win32gui.SetForegroundWindow(hwnd)
+#win32gui.SendMessage(hwnd, win32con.WM_SYSCOMMAND, win32con.SC_RESTORE, 0)
+#time.sleep(1)
+def window_capture(filename,hwnd): #有点是速度快，缺点是有些wpf框架开发的程序会显示黑屏
     #hwnd = 0  # 窗口的编号，0号表示当前活跃窗口
     #hwnd = win32gui.FindWindow(0,"Odin3 v3.14")
     #hwnd = win32gui.GetForegroundWindow()
@@ -54,7 +57,27 @@ def window_capture(filename,hwnd):
     #im = Image.frombuffer('RGB',(bmpinfo['bmWidth'], bmpinfo['bmHeight']),bmpstr, 'raw', 'BGRX', 0, 1)
     #im.save(savefilename)
 
-window_capture(savefilename,hwnd)
+class RECT(ctypes.Structure):
+	_fields_ = [('left', ctypes.c_int),
+				('top', ctypes.c_int),
+				('right', ctypes.c_int),
+				('bottom', ctypes.c_int)]
+
+def pil_capture(filename,hwnd):#缺点是速度慢，但是保证是屏幕截图，所有窗口都可以截图，只要你能调到前面来
+	win32gui.SetForegroundWindow(hwnd)
+	win32gui.SendMessage(hwnd, win32con.WM_SYSCOMMAND, win32con.SC_RESTORE, 0)
+	time.sleep(1)
+	#rect = RECT() 
+	#ctypes.windll.user32.GetWindowRect(hwnd, ctypes.byref(rect))#获取当前窗口坐标
+	#coordinate = (rect.left+4, rect.top+4, rect.right-4, rect.bottom-4)#一般都缩小2个单位，不知道为何
+	left,top,right,bot = win32gui.GetWindowRect(hwnd)
+	d = 8
+	coordinate = (left+d,top+d,right-d,bot-d)
+	pic = ImageGrab.grab(coordinate)
+	pic.save(savefilename)
+	
+
+pil_capture(savefilename,hwnd)
 cv2.namedWindow("capturePic")
 imagex = cv2.imread(savefilename)
 cv2.imshow("capturePic",imagex)
