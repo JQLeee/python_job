@@ -10,23 +10,25 @@ import ctypes
 savefilename = "G:/python_job/background.png"
 
 hwnd_title = {}
-hwnd = 0
 def get_all_hwnd(hwnd,mouse):
     if(win32gui.IsWindow(hwnd)) and win32gui.IsWindowEnabled(hwnd) and win32gui.IsWindowVisible(hwnd):
         hwnd_title.update({hwnd: win32gui.GetWindowText(hwnd)})
-        
-win32gui.EnumWindows(get_all_hwnd, 0)
-for h,t in hwnd_title.items():
-    if t:
-        print(h,"----",t)
-        if t == '驯兽狮':
-            hwnd = h
-print("target hwnd is " + str(hwnd))
+
+def gethwndbyName(name):
+	win32gui.EnumWindows(get_all_hwnd, 0)
+	hwnd = 0
+	for h,t in hwnd_title.items():
+		if t:
+			print(h,":   ",t)
+			if t == name:
+				hwnd=h
+	return hwnd
+			    
 #把窗口调到前台再进行截图，否则可能会黑屏
 #win32gui.SetForegroundWindow(hwnd)
 #win32gui.SendMessage(hwnd, win32con.WM_SYSCOMMAND, win32con.SC_RESTORE, 0)
 #time.sleep(1)
-def window_capture(filename,hwnd): #有点是速度快，缺点是有些wpf框架开发的程序会显示黑屏
+def window_capture(filename,hwnd): #优点是速度快，缺点是有些wpf框架开发的程序会显示黑屏
     #hwnd = 0  # 窗口的编号，0号表示当前活跃窗口
     #hwnd = win32gui.FindWindow(0,"Odin3 v3.14")
     #hwnd = win32gui.GetForegroundWindow()
@@ -62,10 +64,13 @@ def pil_capture(filename,hwnd):#缺点是速度慢，但是保证是屏幕截图
 	pic = ImageGrab.grab(coordinate)
 	pic.save(savefilename)
 	
+def showImage(path,win_title):
+	cv2.namedWindow(win_title)
+	imagex = cv2.imread(path)
+	cv2.imshow(win_title,imagex)
+	cv2.waitKey(0)
+	cv2.destroyAllWindows
 
+hwnd = gethwndbyName("寻宝天行-《诛仙》站 - xiaoq的浏览器")
 pil_capture(savefilename,hwnd)
-cv2.namedWindow("capturePic")
-imagex = cv2.imread(savefilename)
-cv2.imshow("capturePic",imagex)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+showImage(savefilename,"capturePic")
