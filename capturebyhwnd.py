@@ -15,7 +15,7 @@ win32gui.EnumWindows(get_all_hwnd, 0)
 for h,t in hwnd_title.items():
     if t:
         print(h,"----",t)
-        if t == '即时通讯':
+        if t == 'Panda':
             hwnd = h
 print("target hwnd is " + str(hwnd))
 def window_capture(filename,hwnd):
