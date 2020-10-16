@@ -3,17 +3,21 @@ import win32gui, win32ui, win32con, win32api
 import win32clipboard, cv2
 import pyautogui
 
-savefilename = "D:/1/python_test/screenshot/background.png"
-path = "D:/1/python_test/screenshot/"
+savefilename = "G:/python_job/background.png"
 
 hwnd_title = {}
+hwnd = 0
 def get_all_hwnd(hwnd,mouse):
     if(win32gui.IsWindow(hwnd)) and win32gui.IsWindowEnabled(hwnd) and win32gui.IsWindowVisible(hwnd):
         hwnd_title.update({hwnd: win32gui.GetWindowText(hwnd)})
         
 win32gui.EnumWindows(get_all_hwnd, 0)
-
-
+for h,t in hwnd_title.items():
+    if t:
+        print(h,"----",t)
+        if t == '即时通讯':
+            hwnd = h
+print("target hwnd is " + str(hwnd))
 def window_capture(filename,hwnd):
     #hwnd = 0  # 窗口的编号，0号表示当前活跃窗口
     #hwnd = win32gui.FindWindow(0,"Odin3 v3.14")
@@ -22,6 +26,8 @@ def window_capture(filename,hwnd):
     left,top,right,bot = win32gui.GetWindowRect(hwnd)
     w = right-left
     h = bot-top
+    w = w+500
+    h = h+500
     # 根据窗口句柄获取窗口的设备上下文DC（Divice Context）
     hwndDC = win32gui.GetWindowDC(hwnd)
     # 根据窗口的DC获取mfcDC
@@ -38,13 +44,6 @@ def window_capture(filename,hwnd):
     # 截取从左上角（0，0）长宽为（w，h）的图片
     saveDC.BitBlt((0, 0), (w, h), mfcDC, (0, 0), win32con.SRCCOPY)
     saveBitMap.SaveBitmapFile(saveDC, filename)
-
-for h,t in hwnd_title.items():
-    if t:
-        print(h,"----",t)
-        if t == 'screenshot':
-            hwnd = h
-            window_capture(path+t+".png",hwnd)
 
 window_capture(savefilename,hwnd)
 cv2.namedWindow("capturePic")
