@@ -15,7 +15,7 @@ win32gui.EnumWindows(get_all_hwnd, 0)
 for h,t in hwnd_title.items():
     if t:
         print(h,"----",t)
-        if t == 'Panda':
+        if t == '思羽':
             hwnd = h
 print("target hwnd is " + str(hwnd))
 def window_capture(filename,hwnd):
@@ -26,8 +26,6 @@ def window_capture(filename,hwnd):
     left,top,right,bot = win32gui.GetWindowRect(hwnd)
     w = right-left
     h = bot-top
-    w = w+500
-    h = h+500
     # 根据窗口句柄获取窗口的设备上下文DC（Divice Context）
     hwndDC = win32gui.GetWindowDC(hwnd)
     # 根据窗口的DC获取mfcDC
