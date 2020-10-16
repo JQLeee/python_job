@@ -51,25 +51,11 @@ def window_capture(filename,hwnd): #有点是速度快，缺点是有些wpf框�
     saveDC.BitBlt((0, 0), (w, h), mfcDC, (0, 0), win32con.SRCCOPY)
 	#方法一
     saveBitMap.SaveBitmapFile(saveDC, filename)
-	#方法二
-    #bmpinfo = saveBitMap.GetInfo()
-    #bmpstr = saveBitMap.GetBitmapBits(True)
-    #im = Image.frombuffer('RGB',(bmpinfo['bmWidth'], bmpinfo['bmHeight']),bmpstr, 'raw', 'BGRX', 0, 1)
-    #im.save(savefilename)
-
-class RECT(ctypes.Structure):
-	_fields_ = [('left', ctypes.c_int),
-				('top', ctypes.c_int),
-				('right', ctypes.c_int),
-				('bottom', ctypes.c_int)]
 
 def pil_capture(filename,hwnd):#缺点是速度慢，但是保证是屏幕截图，所有窗口都可以截图，只要你能调到前面来
 	win32gui.SetForegroundWindow(hwnd)
 	win32gui.SendMessage(hwnd, win32con.WM_SYSCOMMAND, win32con.SC_RESTORE, 0)
 	time.sleep(1)
-	#rect = RECT() 
-	#ctypes.windll.user32.GetWindowRect(hwnd, ctypes.byref(rect))#获取当前窗口坐标
-	#coordinate = (rect.left+4, rect.top+4, rect.right-4, rect.bottom-4)#一般都缩小2个单位，不知道为何
 	left,top,right,bot = win32gui.GetWindowRect(hwnd)
 	d = 8
 	coordinate = (left+d,top+d,right-d,bot-d)
