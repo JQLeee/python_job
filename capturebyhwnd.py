@@ -2,6 +2,7 @@ import time
 import win32gui, win32ui, win32con, win32api
 import win32clipboard, cv2
 import pyautogui
+from PIL import Image
 
 savefilename = "G:/python_job/background.png"
 
@@ -15,9 +16,13 @@ win32gui.EnumWindows(get_all_hwnd, 0)
 for h,t in hwnd_title.items():
     if t:
         print(h,"----",t)
-        if t == '思羽':
+        if t == '驯兽狮':
             hwnd = h
 print("target hwnd is " + str(hwnd))
+#把窗口调到前台再进行截图，否则可能会黑屏
+win32gui.SetForegroundWindow(hwnd)
+win32gui.SendMessage(hwnd, win32con.WM_SYSCOMMAND, win32con.SC_RESTORE, 0)
+time.sleep(1)
 def window_capture(filename,hwnd):
     #hwnd = 0  # 窗口的编号，0号表示当前活跃窗口
     #hwnd = win32gui.FindWindow(0,"Odin3 v3.14")
@@ -41,7 +46,13 @@ def window_capture(filename,hwnd):
     saveDC.SelectObject(saveBitMap)
     # 截取从左上角（0，0）长宽为（w，h）的图片
     saveDC.BitBlt((0, 0), (w, h), mfcDC, (0, 0), win32con.SRCCOPY)
+	#方法一
     saveBitMap.SaveBitmapFile(saveDC, filename)
+	#方法二
+    #bmpinfo = saveBitMap.GetInfo()
+    #bmpstr = saveBitMap.GetBitmapBits(True)
+    #im = Image.frombuffer('RGB',(bmpinfo['bmWidth'], bmpinfo['bmHeight']),bmpstr, 'raw', 'BGRX', 0, 1)
+    #im.save(savefilename)
 
 window_capture(savefilename,hwnd)
 cv2.namedWindow("capturePic")
