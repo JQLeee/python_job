@@ -66,6 +66,11 @@ def pil_capture(filename,hwnd):#缺点是速度慢，但是保证是屏幕截图
 	coordinate = (left+d,top+d,right-d,bot-d)
 	pic = ImageGrab.grab(coordinate)
 	pic.save(filename)
+
+def pil_capture_by_coordinate(filename,hwnd,x,y,w):
+	coordinate = (x,y,x+w,y+w)
+	pic = ImageGrab.grab(coordinate)
+	pic.save(filename)
 	
 def showImage(path,win_title):
 	cv2.namedWindow(win_title)
