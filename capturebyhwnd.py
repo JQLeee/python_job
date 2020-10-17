@@ -56,9 +56,10 @@ def window_capture(filename,hwnd): #优点是速度快，缺点是有些wpf框�
     saveBitMap.SaveBitmapFile(saveDC, filename)
 
 def pil_capture(filename,hwnd):#缺点是速度慢，但是保证是屏幕截图，所有窗口都可以截图，只要你能调到前面来
-	win32gui.ShowWindow(hwnd,win32con.SW_SHOW)
+	#win32gui.ShowWindow(hwnd,win32con.SW_SHOW)#不能最小化窗口，否则会失效
 	win32gui.SetForegroundWindow(hwnd)
-	#win32gui.SendMessage(hwnd, win32con.WM_SYSCOMMAND, win32con.SC_RESTORE, 0)
+	win32gui.SendMessage(hwnd, win32con.WM_SYSCOMMAND, win32con.SC_RESTORE, 0)#SC_MAXIMIZE 最大化
+	#win32gui.SendMessage(hwnd, win32con.WM_SYSCOMMAND, win32con.SC_MAXIMIZE, 0)
 	time.sleep(0.3)
 	left,top,right,bot = win32gui.GetWindowRect(hwnd)
 	d = 8
@@ -75,7 +76,7 @@ def showImage(path,win_title):
 
 def debug():
 	savefilename = "G:/python_job/background.png"
-	hwnd = gethwndbyName("hosts - Everything")
+	hwnd = gethwndbyName("微信")
 	pil_capture(savefilename,hwnd)
 	showImage(savefilename,"capturePic")
 
