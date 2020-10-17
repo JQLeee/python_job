@@ -28,6 +28,7 @@ def cut():
     img = cv2.imread('screen.jpg')
     cv2.namedWindow('image')
     cv2.setMouseCallback('image', on_mouse)
+    cv2.moveWindow("image",0,0)
     cv2.imshow('image', img)
     cv2.waitKey(0)
     os.remove('screen.jpg')
@@ -65,7 +66,8 @@ def on_mouse(event, x, y, flags, param):
 
 
 keyboard.add_hotkey('F8',cut) #add pageup hotkey
-keyboard.wait('F9')
+recorded = keyboard.record(until='esc')
+	
 
 
 #=================================================

@@ -15,14 +15,14 @@ def get_all_hwnd(hwnd,mouse):
 def gethwndbyName(name):
 	win32gui.EnumWindows(get_all_hwnd, 0)
 	hwnd = 0
-	f=open("G:/python_job/LOG.txt","w",encoding="utf-8")
+	#f=open("G:/python_job/LOG.txt","w",encoding="utf-8")
 	for h,t in hwnd_title.items():
 		if t:
 			print(h,":   ",t)
-			f.write(str(h)+":   "+t+"\n")
+			#f.write(str(h)+":   "+t+"\n")
 			if t == name:
 				hwnd=h
-	f.close()
+	#f.close()
 	return hwnd
 			    
 #把窗口调到前台再进行截图，否则可能会黑屏
