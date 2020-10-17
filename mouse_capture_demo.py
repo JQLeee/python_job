@@ -24,14 +24,14 @@ def on_mouse_event(event):
 
 def cut():
     global img
-    scrren_cut()
+    screen_cut()
     img = cv2.imread('screen.jpg')
     cv2.namedWindow('image')
     cv2.setMouseCallback('image', on_mouse)
     cv2.imshow('image', img)
     cv2.waitKey(0)
     os.remove('screen.jpg')
-def scrren_cut():
+def screen_cut():
     beg = time.time()
     debug = False
     # img = ImageGrab.grab(bbox=(250, 161, 1141, 610))
@@ -49,6 +49,7 @@ def on_mouse(event, x, y, flags, param):
         cv2.rectangle(img2, point1, (x,y), (255,0,0), 5)
         cv2.imshow('image', img2)
     elif event == cv2.EVENT_LBUTTONUP:         #左键释放
+        print("release button")
         point2 = (x,y)
         cv2.rectangle(img2, point1, point2, (0,0,255), 5) 
         cv2.imshow('image', img2)
@@ -57,17 +58,9 @@ def on_mouse(event, x, y, flags, param):
         width = abs(point1[0] - point2[0])
         height = abs(point1[1] -point2[1])
         cut_img = img[min_y:min_y+height, min_x:min_x+width]
-        cv2.imwrite('cut.jpg', cut_img)
+        timestamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
+        cv2.imwrite(path + str(timestamp) + "_capture.png", cut_img)
 
-
-
-
-def main():	
-	print("start to capture")
-	hm = pyHook.HookManager()
-	hm.MouseAll = on_mouse_event
-	hm.HookMouse()
-	pythoncom.PumpMessages()#进入循环，程序一直监听
 
 
 
