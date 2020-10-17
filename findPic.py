@@ -1,5 +1,6 @@
-import cv2 ,win32gui ,pyautogui
+import cv2 ,win32gui ,pyautogui ,win32api ,win32con ,time
 import capturebyhwnd 
+from pymouse import PyMouse
 
 path="G:/python_job/screenshot/"
 d=8
@@ -25,9 +26,25 @@ def mouse_click_abs(hwnd,x,y):
 	left,top,right,bot = win32gui.GetWindowRect(hwnd)
 	nx = x + left + d
 	ny = y + top + d
-	for i in range(10):
-		pyautogui.click(nx,ny)
+	for i in range(2):
+		#pyautogui.click(nx,ny)
+		#pa_click(nx,ny)
+		pymouse_click(nx,ny)
+		#win32_click(hwnd,x,y) #不用作坐标变换
 		print("click at " + str(nx) + "," + str(ny))
+
+def pa_click(x,y):
+	pyautogui.click(x,y)
+
+def pymouse_click(x,y):
+	m=PyMouse()
+	m.click(x,y)
+
+def win32_click(hwnd,x,y): #这个不用作坐标变换，因为已经绑定了hwnd,已经是相对坐标
+	long_position = win32api.MAKELONG(x,y)
+	win32api.SendMessage(hwnd, win32con.WM_LBUTTONDOWN, win32con.MK_LBUTTON, long_position)#模拟鼠标按下
+	time.sleep(0.03)
+	win32api.SendMessage(hwnd, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, long_position)#模拟鼠标弹起
 	
 def debug():
 	hwnd = capturebyhwnd.gethwndbyName("安静的奇女子")
