@@ -5,7 +5,7 @@ from pymouse import PyMouse
 path="G:/python_job/screenshot/"
 d=8
 
-global gx,gy
+#global gx,gy
 
 def find_pic_in_template(target,hwnd):
 	global gx ,gy
@@ -17,15 +17,15 @@ def find_pic_in_template(target,hwnd):
 	result = cv2.matchTemplate(tar,temp,cv2.TM_SQDIFF_NORMED)
 	min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 	#如果匹配度小于90%,就认为没有找到
-	if min_val >0.1:
+	if min_val >0.05:
 		return None
 	
 	print(str(min_val))
 	#计算要点击的坐标
-	gx=min_loc[0] + tar_w//3
-	gy=min_loc[1] + tar_h//3
+	x=min_loc[0] + tar_w//3
+	y=min_loc[1] + tar_h//3
 	
-	return gx,gy
+	return x,y
 	
 def mouse_click_abs(hwnd,x,y):
 	left,top,right,bot = win32gui.GetWindowRect(hwnd)
@@ -51,8 +51,8 @@ def win32_click(hwnd,x,y): #这个不用作坐标变换，因为已经绑定了h
 	time.sleep(0.03)
 	win32api.SendMessage(hwnd, win32con.WM_LBUTTONUP, win32con.MK_LBUTTON, long_position)#模拟鼠标弹起
 	
-def click(hwnd):
-	mouse_click_abs(hwnd,gx,gy)
+def click(hwnd,x,y):
+	mouse_click_abs(hwnd,x,y)
 	
 def debug():
 	windowname = "雷电模拟器（天命）"
