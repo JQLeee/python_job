@@ -17,11 +17,11 @@ class HwndManager:
     def get_hwnd_by_name(self,name):
         self.find_all_hwnd()
         hwnd = 0
+        f = open(self.log_save_path, "w", encoding="utf-8")
         for h,t in self.hwnd_titles.items():
             if t:
                 print(h, " : ", t)
-                with open(self.log_save_path,'w',encoding='utf-8') as f:
-                    f.write(str(h) + " : " + t )
+                f.write(str(h) + " : " + t + '\n')
                 if t == name:
                     hwnd =h
         f.close()
